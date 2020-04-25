@@ -4,15 +4,16 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 
-contract PlainToken is ERC20, Ownable {
-    string public constant name = "Plain Token";
-    string public constant symbol = "PLN";
-    uint8 public constant decimals = 2;
-    uint256 constant INITIAL_SUPPLY = 1000000;
+contract PlainToken is ERC20("Plain Token", "PLN"), Ownable {
+    uint8 public constant DECIMALS = 2;
+    uint256 public constant INITIAL_SUPPLY = 1000000;
 
     constructor() public {
+        _setupDecimals(DECIMALS);
         _mint(msg.sender, INITIAL_SUPPLY);
+
     }
+
 
     // function totalSupply() public view override returns (uint256)
     // function balanceOf(address account) public view override returns (uint256)
