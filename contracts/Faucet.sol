@@ -1,7 +1,7 @@
-pragma solidity ^0.6.6;
+pragma solidity ^0.6.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/ownership/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 
 contract Faucet is Ownable {
@@ -34,6 +34,6 @@ contract Faucet is Ownable {
     }
 
     function send(uint256 amount) public {
-        token.transfer(address(this), amount)
+        token.transfer(address(this), amount);
     }
 }

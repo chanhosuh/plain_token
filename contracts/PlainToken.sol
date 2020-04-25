@@ -1,9 +1,10 @@
-pragma solidity ^0.6.6;
+pragma solidity ^0.6.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 
-contract PlainToken is ERC20 {
+contract PlainToken is ERC20, Ownable {
     string public constant name = "Plain Token";
     string public constant symbol = "PLN";
     uint8 public constant decimals = 2;
@@ -14,7 +15,6 @@ contract PlainToken is ERC20 {
     }
 
     // function totalSupply() public view override returns (uint256)
-
     // function balanceOf(address account) public view override returns (uint256)
     // function transfer(address recipient, uint256 amount) public virtual override returns (bool)
     // function allowance(address owner, address spender) public view virtual override returns (uint256)
