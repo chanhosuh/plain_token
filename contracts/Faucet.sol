@@ -32,8 +32,4 @@ contract Faucet is Ownable {
         token.transfer(msg.sender, amount);
         emit FaucetWithdrawal(msg.sender, amount);
     }
-
-    function send(uint256 amount) public {
-        token.transfer(address(this), amount);
-    }
 }
