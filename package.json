@@ -1,5 +1,5 @@
 {
-  "name": "ubi-token",
+  "name": "plain-token",
   "version": "1.0.0",
   "description": "",
   "main": "truffle-config.js",
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "mocha",
-    "lint": "npx solium -d contracts --fix",
+    "lint": "npx solhint contracts/**/*.sol",
     "coverage": "npx solidity-coverage",
     "ganache": "./ganache/ganache_start.sh",
     "generate_keys": "./ganache/generate_keys.sh"
@@ -18,10 +18,10 @@
   "dependencies": {
     "@openzeppelin/contracts": "^3.0.0",
     "dotenv": "^8.2.0",
-    "ganache-cli": "^6.7.0",
+    "ganache-cli": "^6.9.1",
     "solhint": "^2.3.1",
     "solidity-coverage": "^0.6.7",
-    "truffle": "^5.1.3",
+    "truffle": "^5.1.23",
     "truffle-hdwallet-provider": "^1.0.17",
     "web3-utils": "^1.2.4"
   }
