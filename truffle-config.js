@@ -17,24 +17,27 @@
  * phrase from a file you've .gitignored so it doesn't accidentally become public.
  *
  */
+
 const HDWalletProvider = require("truffle-hdwallet-provider");
 const utils = require("web3-utils");
-require("dotenv").config();
+require("dotenv").config(); // load env variables from .env file
+const path = require("path");
 
 const INFURA_KEY_RINKEBY = process.env.INFURA_KEY_RINKEBY;
 // const INFURA_KEY_ROPSTEN = process.env.INFURA_KEY_ROPSTEN;
 // const INFURA_KEY_MAINNET = process.env.INFURA_KEY_MAINNET;
 const MNEMONIC = process.env.MNEMONIC;
 
-const rinkebyProvider = new HDWalletProvider(
-  MNEMONIC,
-  `https://rinkeby.infura.io/v3/${INFURA_KEY_RINKEBY}`
-);
-// const ropstenProvider = new HDWalletProvider(
+const getRinkebyProvider = () =>
+  new HDWalletProvider(
+    MNEMONIC,
+    `https://rinkeby.infura.io/v3/${INFURA_KEY_RINKEBY}`
+  );
+// const getRopstenProvider = () => new HDWalletProvider(
 //   MNEMONIC,
 //   `https://ropsten.infura.io/v3/${INFURA_KEY_ROPSTEN}`
 // );
-// const mainnetProvider = new HDWalletProvider(
+// const getMainnetProvider = () => new HDWalletProvider(
 //   MNEMONIC,
 //   `https://mainnet.infura.io/v3/${INFURA_KEY_MAINNET}`
 // );
@@ -42,6 +45,8 @@ const rinkebyProvider = new HDWalletProvider(
 delete process.env.MNEMONIC;
 
 module.exports = {
+  contracts_build_directory: path.join(__dirname, "frontend/src/contracts"),
+
   /**
    * Networks define how you connect to your ethereum client and let you set the
    * defaults web3 uses to send transactions. If you don't specify one truffle
@@ -51,46 +56,58 @@ module.exports = {
    *
    * $ truffle test --network <network-name>
    */
+
   networks: {
+    /* available options for each network:
+     *
+     * host: (default: none)
+     * port: (default: none)
+     * network_id: (default: none)
+     * gas: gas limit used for deploys. Default is 6721975
+     * gasPrice: gas price used for deploys. Default is 100000000000 (100 Shannon).
+     * from: address used during migrations. Defaults to accounts[0].
+     * provider - web3 provider instance Truffle should use to talk to the Ethereum network.
+     *          - function that returns a web3 provider instance (see below.)
+     *          - if specified, host and port are ignored.
+     * websockets: enable EventEmitter interface for web3 (default: false)
+     * confirmations: number of confirmations to wait between deployments. (default: 0)
+     * timeoutBlocks: - if a transaction is not mined, keep waiting for this number of blocks (default is 50)
+     * skipDryRun: - true if you don't want to test run the migration locally before the actual migration (default is false)
+     */
+
+    /*
+     * Useful for testing. The `development` name is special - truffle uses it by default
+     * if it's defined here and no other network is specified at the command line.
+     * You should run a client (like ganache-cli, geth or parity) in a separate terminal
+     * tab if you use this network and you must also set the `host`, `port` and `network_id`
+     * options below to some value.
+     */
     development: {
-      host: "127.0.0.1", // Localhost (default: none)
-      port: 8545, // Standard Ethereum port (default: none)
-      network_id: "*", // Any network (default: none)
+      host: "127.0.0.1", // Localhost
+      port: 8545, // Standard Ethereum port
+      network_id: "*" // Any network
     },
     // mainnet: {
-    //   // Provided by Infura, load keys in .env file
     //   network_id: "1",
-    //   provider: mainNetProvider,
+    //   provider: getMainNetProvider,
     //   gas: 4600000,
     //   gasPrice: utils.toWei("20", "gwei")
     // },
     // ropsten: {
-    //   // Provided by Infura, load keys in .env file
     //   network_id: "3",
-    //   provider: ropstenProvider,
-    //   gas: 4600000,
+    //   provider: getRopstenProvider,
+    //   gas: 5500000,        // Ropsten has a lower block limit than mainnet
     //   gasPrice: utils.toWei("20", "gwei")
+    //   confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+    //   timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
+    //   skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
     // },
     rinkeby: {
-      // Provided by Infura, load keys in .env file
       network_id: "4",
-      provider: rinkebyProvider,
+      provider: getRinkebyProvider,
       gas: 4600000,
-      gasPrice: utils.toWei("20", "gwei"),
-    },
-    kovan: {
-      network_id: 42,
-      host: "localhost", // parity --chain=kovan
-      port: 8545,
-      gas: 5000000,
-    },
-    ganache: {
-      // Ganache local test RPC blockchain
-      network_id: "5777",
-      host: "localhost",
-      port: 7545,
-      gas: 6721975,
-    },
+      gasPrice: utils.toWei("20", "gwei")
+    }
   },
 
   // Set default mocha options here, use special reporters etc.
@@ -101,7 +118,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.6.6", // Fetch exact version from solc-bin (default: truffle's version)
+      // version: "0.5.1",    // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
       //  optimizer: {
@@ -110,6 +127,6 @@ module.exports = {
       //  },
       //  evmVersion: "byzantium"
       // }
-    },
-  },
+    }
+  }
 };
