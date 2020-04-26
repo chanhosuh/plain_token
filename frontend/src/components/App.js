@@ -40,7 +40,8 @@ const setupWeb3 = async (setAccount, setNetwork) => {
     web3Provider.on("networkChanged", async (netId) => {
       console.log("Network changed.");
       console.log("Net ID: ", netId);
-      setNetwork(CHAIN_IDS[netId]);
+      const chain_id = CHAIN_IDS[netId] || netId;
+      setNetwork(chain_id);
     });
 
     return web3;
@@ -65,7 +66,8 @@ const initDapp = async (
   setAccount(accounts[0]);
 
   const netId = await web3.eth.net.getId();
-  setNetwork(CHAIN_IDS[netId]);
+  const chain_id = CHAIN_IDS[netId] || netId;
+  setNetwork(chain_id);
 
   const token = await getContract(tokenArtifact, web3);
   const faucet = await getContract(faucetArtifact, web3);
