@@ -11,6 +11,7 @@ node_modules
 # build artifacts
 /build
 /frontend/build
+/bin
 
 # env files
 .env
