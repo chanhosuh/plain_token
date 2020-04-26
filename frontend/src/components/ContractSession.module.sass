@@ -1,0 +1,28 @@
+@import './Section.sass'
+
+.section_contract
+    @extend .section
+    justify-content: space-evenly
+    padding: 25px
+    margin: auto
+
+    &_desc
+        display: flex
+        flex-direction: row
+        padding: 10px
+        margin: auto
+
+    &_info
+        flex: 1
+        padding: 10px
+        margin: auto
+        border: 1px solid gray
+
+    p
+        padding: 25px
+
+.title_outlined
+    font-size: 8vh
+    color: #ffce00
+    text-shadow: -1px -1px 0 #000, 0 -1px 0 #000, 1px -1px 0 #000, 1px 0 0 #000
+    1px 1px 0 #000, 0 1px 0 #000, -1px 1px 0 #000, -1px 0 0 #000
