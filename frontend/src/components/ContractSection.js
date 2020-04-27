@@ -3,9 +3,8 @@ import Section from "./Section";
 import styles from "./ContractSession.module.sass";
 
 const ContractSection = ({ name, symbol, decimals, totalSupply }) => {
-  console.log("Total supply:", totalSupply);
-  console.log("decimals:", decimals);
-
+  console.debug("Total supply:", totalSupply);
+  console.debug("decimals:", decimals);
   const supply = parseInt(totalSupply) / 10 ** parseInt(decimals);
 
   return (

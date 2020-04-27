@@ -9,17 +9,16 @@ const Item = (props) => {
 
 const UserSection = ({
   account,
-  isTokenOwner,
+  isOwner,
   tokenBalance,
   faucetBalance,
   onSendToFaucetClick,
   onGetTokenClick,
-  startRef,
   children,
 }) => {
   const SectionFragment = ({ children }) => {
     return (
-      <Section id="user" className="section--user" scrollRef={startRef}>
+      <Section id="user" className="section--user">
         {children}
       </Section>
     );
@@ -35,7 +34,7 @@ const UserSection = ({
       </SectionFragment>
     );
   } else {
-    if (isTokenOwner) {
+    if (isOwner) {
       instance = (
         <SectionFragment>
           <h2>Controls</h2>

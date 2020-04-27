@@ -1,8 +1,6 @@
 async function getContract(contractArtifact, web3) {
   // determine network to connect to
   let networkId = await web3.eth.net.getId();
-  console.log("networkId", networkId);
-
   let deployedNetwork = contractArtifact.networks[networkId];
   if (!deployedNetwork) {
     console.warn(

@@ -91,6 +91,34 @@ const updateTokenInfo = async (token, setTokenDetails) => {
   setTokenDetails({ name, symbol, decimals, totalSupply });
 };
 
+const updateBalances = async (account, token, faucet, setBalances) => {
+  if (!token || !faucet) return;
+
+  let accountBalance;
+  try {
+    accountBalance = await token.methods.balanceOf(account).call();
+  } catch (err) {
+    console.log(err);
+    accountBalance = 0;
+  }
+  accountBalance = toBN(accountBalance).toString();
+
+  let faucetBalance;
+  try {
+    faucetBalance = await token.methods
+      .balanceOf(faucet.options.address)
+      .call();
+  } catch (err) {
+    console.log(err);
+    faucetBalance = 0;
+  }
+  faucetBalance = toBN(faucetBalance).toString();
+
+  setBalances({ account: accountBalance, faucet: faucetBalance });
+  console.debug(`updated token balance: ${accountBalance} `);
+  console.debug(`updated faucet balance: ${faucetBalance} `);
+};
+
 const App = () => {
   const [account, setAccount] = useState("No address - check MetaMask");
   const [network, setNetwork] = useState("No network - check MetaMask");
@@ -123,8 +151,11 @@ const App = () => {
     );
   }, [account, network]);
 
+  useEffect(() => {
+    updateBalances(account, token, faucet, setBalances);
+  }, [account, token, faucet, transactionStatus]);
+
   const handleGetTokenClick = async (event) => {
-    const { faucet, accounts } = this.state;
     event.preventDefault();
 
     setTransactionStatus({
@@ -134,26 +165,21 @@ const App = () => {
 
     await faucet.methods
       .withdraw(100)
-      .send({ from: accounts[0] }, handleTransactionResult);
-
-    updateBalances();
+      .send({ from: account }, handleTransactionResult);
   };
 
   const handleSendToFaucetClick = async (event) => {
-    const { token, faucet, accounts } = this.state;
     event.preventDefault();
 
     setTransactionStatus({
       message: "Waiting on transaction success...",
-      messageType: "wait",
+      type: "wait",
     });
 
     console.debug("faucet address: ", faucet.options.address);
     await token.methods
       .transfer(faucet.options.address, 1000)
-      .send({ from: accounts[0] }, handleTransactionResult);
-
-    updateBalances();
+      .send({ from: account }, handleTransactionResult);
   };
 
   const handleTransactionResult = (err, txHash) => {
@@ -161,41 +187,15 @@ const App = () => {
       console.log(err);
       setTransactionStatus({
         message: "Transaction failed.",
-        messageType: "fail",
+        type: "fail",
       });
     } else {
       console.debug("Transaction successful, txHash: ", txHash);
       setTransactionStatus({
         message: "Sent tokens to faucet.",
-        messageType: "success",
+        type: "success",
       });
     }
-  };
-
-  const updateBalances = async () => {
-    let accountBalance;
-    try {
-      accountBalance = await token.methods.balanceOf(account.call());
-    } catch (err) {
-      console.log(err);
-      accountBalance = 0;
-    }
-    accountBalance = toBN(accountBalance).toString();
-
-    let faucetBalance;
-    try {
-      faucetBalance = await token.methods
-        .balanceOf(faucet.options.address)
-        .call();
-    } catch (err) {
-      console.log(err);
-      faucetBalance = 0;
-    }
-    faucetBalance = toBN(faucetBalance).toString();
-
-    setBalances({ accountBalance, faucetBalance });
-    console.debug(`updated token balance: ${accountBalance} `);
-    console.debug(`updated faucet balance: ${faucetBalance} `);
   };
 
   return (
@@ -207,11 +207,11 @@ const App = () => {
       <ContractSection {...tokenDetails} />
       <UserSection
         account={account}
-        isTokenOwner={isOwner}
-        tokenBalance={balances.token}
+        isOwner={isOwner}
+        tokenBalance={balances.account}
         faucetBalance={balances.faucet}
         onSendToFaucetClick={handleSendToFaucetClick}
-        onGetUBIClick={handleGetTokenClick}
+        onGetTokenClick={handleGetTokenClick}
       >
         <TransactionStatus
           message={transactionStatus.message}
