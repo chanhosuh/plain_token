@@ -2145,6 +2145,63 @@
     "version": "0.6.6+commit.6c089d02.Emscripten.clang"
   },
   "networks": {
+    "4": {
+      "events": {
+        "0x3b58fa96ccdacff9b0d8e5d18fe15719c9f82e13f13e967c2d3aabaf4440db20": {
+          "anonymous": false,
+          "inputs": [],
+          "name": "FaucetTurnedOff",
+          "type": "event"
+        },
+        "0x03f17b23a04801930f98794f53b8b2a5046789aa64c578b0f56fe45d4ff81cab": {
+          "anonymous": false,
+          "inputs": [],
+          "name": "FaucetTurnedOn",
+          "type": "event"
+        },
+        "0x9860605971909f9d484ca435cd8b451ae2e01af9360f5d72ccdc6137d02a7b98": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "name": "FaucetWithdrawal",
+          "type": "event"
+        },
+        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x389ccf84329A8591A7C7eb51D521353df54cE298",
+      "transactionHash": "0x1ce9d5c2b0f26fcb4916f134e284c51b99147bfd73621bd8b76d671110103708"
+    },
     "10312008": {
       "events": {
         "0x3b58fa96ccdacff9b0d8e5d18fe15719c9f82e13f13e967c2d3aabaf4440db20": {
@@ -2204,7 +2261,7 @@
     }
   },
   "schemaVersion": "3.1.0",
-  "updatedAt": "2020-04-26T23:53:02.747Z",
+  "updatedAt": "2020-04-27T01:27:23.338Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {
