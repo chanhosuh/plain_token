@@ -11,6 +11,9 @@ import faucetArtifact from "../contracts/Faucet";
 import UserSection from "./UserSection";
 import TransactionStatus from "./TransactionStatus";
 
+import Section from "./Section";
+import styles from "./ContractSession.module.sass";
+
 const getAccounts = async (web3) => {
   const accounts = await web3.eth.getAccounts();
   console.log("accounts[0]: ", accounts[0]);
@@ -198,26 +201,40 @@ const App = () => {
     }
   };
 
+  const { totalSupply, decimals, name, symbol } = tokenDetails;
+  console.debug("Total supply:", totalSupply);
+  console.debug("decimals:", decimals);
+  const supply = parseInt(totalSupply) / 10 ** parseInt(decimals);
+
   return (
     <div className="container">
       <Header>
         <HeaderItem>Account: {account}</HeaderItem>
         <HeaderItem>Network: {network}</HeaderItem>
       </Header>
-      <ContractSection {...tokenDetails} />
-      <UserSection
-        account={account}
-        isOwner={isOwner}
-        tokenBalance={balances.account}
-        faucetBalance={balances.faucet}
-        onSendToFaucetClick={handleSendToFaucetClick}
-        onGetTokenClick={handleGetTokenClick}
-      >
-        <TransactionStatus
-          message={transactionStatus.message}
-          messageType={transactionStatus.type}
-        />
-      </UserSection>
+      <Section className={styles.section_contract}>
+        <h2 className={styles.title_outlined}>
+          <center>
+            {name} ({symbol})
+          </center>
+        </h2>
+        <p>
+          Total supply: {supply} {symbol}
+        </p>
+        <UserSection
+          account={account}
+          isOwner={isOwner}
+          tokenBalance={balances.account}
+          faucetBalance={balances.faucet}
+          onSendToFaucetClick={handleSendToFaucetClick}
+          onGetTokenClick={handleGetTokenClick}
+        >
+          <TransactionStatus
+            message={transactionStatus.message}
+            messageType={transactionStatus.type}
+          />
+        </UserSection>
+      </Section>
     </div>
   );
 };

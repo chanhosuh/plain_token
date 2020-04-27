@@ -9,28 +9,14 @@ const ContractSection = ({ name, symbol, decimals, totalSupply }) => {
 
   return (
     <Section className={styles.section_contract}>
-      <div className={styles.section_contract_desc}>
-        <div>
-          <h1 className={styles.title_outlined}>ERC 20 </h1>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-evenly",
-          }}
-        ></div>
-      </div>
-      <div className={styles.section_contract_info}>
-        <h2>
-          <center>
-            {name} ({symbol})
-          </center>
-        </h2>
-        <p>
-          Total supply: {supply} {symbol}
-        </p>
-      </div>
+      <h2 className={styles.title_outlined}>
+        <center>
+          {name} ({symbol})
+        </center>
+      </h2>
+      <p>
+        Total supply: {supply} {symbol}
+      </p>
     </Section>
   );
 };
