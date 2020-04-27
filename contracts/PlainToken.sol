@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract PlainToken is ERC20("Plain Token", "PLN"), Ownable {
     uint8 public constant DECIMALS = 2;
-    uint256 public constant INITIAL_SUPPLY = 1000000;
+    uint256 public constant INITIAL_SUPPLY = 100000000;
 
     constructor() public {
         _setupDecimals(DECIMALS);
