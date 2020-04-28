@@ -22,7 +22,7 @@ const getAccounts = async (web3) => {
 
 const checkIsOwner = async (token, account, setIsOwner) => {
   const ownerAddress = await token.methods.owner().call();
-  const isTokenOwner = ownerAddress === account;
+  const isTokenOwner = ownerAddress.toLowerCase() === account.toLowerCase();
   console.debug("is token owner: ", isTokenOwner);
   setIsOwner(isTokenOwner);
 };
@@ -160,7 +160,7 @@ const App = () => {
   }, [account, network]);
 
   useEffect(() => {
-    if (!account || !network || !web3) return;
+    if (account === NO_NETWORK || network === NO_NETWORK || !web3) return;
     resetToken(web3, account, setToken, setFaucet, setTokenDetails, setIsOwner);
   }, [web3, account, network]);
 
