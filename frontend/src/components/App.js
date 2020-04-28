@@ -89,6 +89,34 @@ const resetToken = async (
   await checkIsOwner(token, account, setIsOwner);
 };
 
+const setEventListeners = async (account, token, faucet, setBalances) => {
+  if (!token) return;
+
+  console.debug("Setting event listeners...");
+
+  token.events
+    .Transfer({
+      filter: { to: account },
+    })
+    .on("data", async function(event) {
+      console.debug("Transfer to account:", account);
+      await updateBalances(account, token, faucet, setBalances);
+    })
+    .on("error", console.error);
+
+  token.events
+    .Transfer({
+      filter: { from: account },
+    })
+    .on("data", async function(event) {
+      console.debug("Transfer from account:", account);
+      await updateBalances(account, token, faucet, setBalances);
+    })
+    .on("error", console.error);
+
+  await updateBalances(account, token, faucet, setBalances);
+};
+
 const updateTokenInfo = async (token, setTokenDetails) => {
   const name = await token.methods.name().call();
   const symbol = await token.methods.symbol().call();
@@ -155,7 +183,7 @@ const App = () => {
   const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
-    if (account === NO_ADDRESS || network === NO_NETWORK)
+    if (account === NO_ADDRESS && network === NO_NETWORK)
       initDapp(setWeb3, setAccount, setNetwork);
   }, [account, network]);
 
@@ -165,8 +193,9 @@ const App = () => {
   }, [web3, account, network]);
 
   useEffect(() => {
-    updateBalances(account, token, faucet, setBalances);
-  }, [account, token, faucet, transactionStatus]);
+    if (account === NO_NETWORK || !token || !faucet) return;
+    setEventListeners(account, token, faucet, setBalances);
+  }, [account, token, faucet]);
 
   const handleGetTokenClick = async (event) => {
     event.preventDefault();
