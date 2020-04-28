@@ -23,7 +23,7 @@ async function getContract(contractArtifact, web3) {
     );
   } catch (err) {
     console.error("Failed to retrieve deployed contract.");
-    console.error(err);
+    console.debug(err);
   }
 
   return contract;

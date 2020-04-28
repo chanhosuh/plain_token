@@ -50,26 +50,34 @@ const setupWeb3 = async (setAccount, setNetwork) => {
   }
 };
 
-const initDapp = async (
-  setToken,
-  setFaucet,
-  setAccount,
-  setTokenDetails,
-  setNetwork,
-  setIsOwner
-) => {
+const initDapp = async (setWeb3, setAccount, setNetwork) => {
   const web3 = await setupWeb3(setAccount, setNetwork);
   if (!web3) {
     console.debug("Web3 could not be initialized.");
     return;
   }
+  setWeb3(web3);
 
   const accounts = await getAccounts(web3);
   setAccount(accounts[0]);
 
   const netId = await web3.eth.net.getId();
+  console.log("Net ID: ", netId);
   const chain_id = CHAIN_IDS[netId] || netId;
   setNetwork(chain_id);
+
+  console.log("Dapp initialised");
+};
+
+const resetToken = async (
+  web3,
+  account,
+  setToken,
+  setFaucet,
+  setTokenDetails,
+  setIsOwner
+) => {
+  if (!web3) return;
 
   const token = await getContract(tokenArtifact, web3);
   const faucet = await getContract(faucetArtifact, web3);
@@ -78,9 +86,7 @@ const initDapp = async (
 
   await updateTokenInfo(token, setTokenDetails);
 
-  checkIsOwner(token, accounts[0], setIsOwner);
-
-  console.log("Dapp initialised");
+  checkIsOwner(token, account, setIsOwner);
 };
 
 const updateTokenInfo = async (token, setTokenDetails) => {
@@ -100,7 +106,8 @@ const updateBalances = async (account, token, faucet, setBalances) => {
   try {
     accountBalance = await token.methods.balanceOf(account).call();
   } catch (err) {
-    console.log(err);
+    console.log("Could not retrieve account balance");
+    console.debug(err);
     accountBalance = 0;
   }
   accountBalance = toBN(accountBalance).toString();
@@ -111,7 +118,8 @@ const updateBalances = async (account, token, faucet, setBalances) => {
       .balanceOf(faucet.options.address)
       .call();
   } catch (err) {
-    console.log(err);
+    console.log("Could not retrieve faucet balance");
+    console.debug(err);
     faucetBalance = 0;
   }
   faucetBalance = toBN(faucetBalance).toString();
@@ -121,9 +129,13 @@ const updateBalances = async (account, token, faucet, setBalances) => {
   console.debug(`updated faucet balance: ${faucetBalance} `);
 };
 
+const NO_ADDRESS = "No address - check MetaMask";
+const NO_NETWORK = "No network - check MetaMask";
+
 const App = () => {
-  const [account, setAccount] = useState("No address - check MetaMask");
-  const [network, setNetwork] = useState("No network - check MetaMask");
+  const [account, setAccount] = useState(NO_ADDRESS);
+  const [network, setNetwork] = useState(NO_NETWORK);
+  const [web3, setWeb3] = useState(null);
   const [token, setToken] = useState(null);
   const [faucet, setFaucet] = useState(null);
   const [tokenDetails, setTokenDetails] = useState({
@@ -143,15 +155,14 @@ const App = () => {
   const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
-    initDapp(
-      setToken,
-      setFaucet,
-      setAccount,
-      setTokenDetails,
-      setNetwork,
-      setIsOwner
-    );
+    if (account === NO_ADDRESS || network === NO_NETWORK)
+      initDapp(setWeb3, setAccount, setNetwork);
   }, [account, network]);
+
+  useEffect(() => {
+    if (!account || !network || !web3) return;
+    resetToken(web3, account, setToken, setFaucet, setTokenDetails, setIsOwner);
+  }, [web3, account, network]);
 
   useEffect(() => {
     updateBalances(account, token, faucet, setBalances);
