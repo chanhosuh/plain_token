@@ -36,7 +36,7 @@ const getRinkebyProvider = () =>
 const getRopstenProvider = () =>
   new HDWalletProvider(
     MNEMONIC,
-    `https://ropsten.infura.io/v3/${INFURA_kEY_ROPSTEN}`
+    `https://ropsten.infura.io/v3/${INFURA_KEY_ROPSTEN}`
   );
 // const getMainnetProvider = () => new HDWalletProvider(
 //   MNEMONIC,
