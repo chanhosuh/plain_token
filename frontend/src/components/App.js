@@ -86,7 +86,7 @@ const resetToken = async (
 
   await updateTokenInfo(token, setTokenDetails);
 
-  checkIsOwner(token, account, setIsOwner);
+  await checkIsOwner(token, account, setIsOwner);
 };
 
 const updateTokenInfo = async (token, setTokenDetails) => {
