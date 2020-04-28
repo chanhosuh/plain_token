@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./App.sass";
 import initWeb3 from "../utils/web3";
-import { toWei, fromWei, toBN } from "web3-utils";
+import { toBN } from "web3-utils";
 import getContract from "../utils/contract";
-import ContractSection from "./ContractSection";
 import { Header, HeaderItem } from "./Header";
 import { CHAIN_IDS } from "../utils/constants";
 import tokenArtifact from "../contracts/PlainToken";
@@ -162,7 +161,7 @@ const App = () => {
     event.preventDefault();
 
     setTransactionStatus({
-      message: "Waiting on transaction success...",
+      message: "Waiting on transaction status...",
       type: "wait",
     });
 
@@ -175,7 +174,7 @@ const App = () => {
     event.preventDefault();
 
     setTransactionStatus({
-      message: "Waiting on transaction success...",
+      message: "Waiting on transaction status...",
       type: "wait",
     });
 
@@ -195,7 +194,7 @@ const App = () => {
     } else {
       console.debug("Transaction successful, txHash: ", txHash);
       setTransactionStatus({
-        message: "Sent tokens to faucet.",
+        message: "Transaction succeeded.",
         type: "success",
       });
     }
@@ -228,12 +227,11 @@ const App = () => {
           faucetBalance={balances.faucet}
           onSendToFaucetClick={handleSendToFaucetClick}
           onGetTokenClick={handleGetTokenClick}
-        >
-          <TransactionStatus
-            message={transactionStatus.message}
-            messageType={transactionStatus.type}
-          />
-        </UserSection>
+        ></UserSection>
+        <TransactionStatus
+          message={transactionStatus.message}
+          messageType={transactionStatus.type}
+        />
       </Section>
     </div>
   );

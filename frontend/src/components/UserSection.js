@@ -7,6 +7,14 @@ const Item = (props) => {
   return <div className="section--user-item">{props.children}</div>;
 };
 
+const SubItem = (props) => {
+  return <div className="section--user-subitem">{props.children}</div>;
+};
+
+const Title = (props) => {
+  return <div className="section--user-title">{props.children}</div>;
+};
+
 const UserSection = ({
   account,
   isOwner,
@@ -37,9 +45,17 @@ const UserSection = ({
     if (isOwner) {
       instance = (
         <SectionFragment>
-          <h2>Controls</h2>
-          <p>Account balance: {tokenBalance} PLT</p>
-          <p>Faucet balance: {faucetBalance} PLT</p>
+          <Title>
+            <h2>Controls</h2>
+          </Title>
+          <Item>
+            <SubItem>Account balance: </SubItem>
+            <SubItem>{tokenBalance} PLT</SubItem>
+          </Item>
+          <Item>
+            <SubItem>Faucet balance: </SubItem>
+            <SubItem>{faucetBalance} PLT</SubItem>
+          </Item>
           <ControlButton onClick={onSendToFaucetClick}>
             Send to faucet
           </ControlButton>
@@ -49,14 +65,14 @@ const UserSection = ({
     } else {
       instance = (
         <SectionFragment>
-          <Item>
+          <Title>
             <h2>Your account</h2>
+          </Title>
+          <Item>
+            <SubItem>Token balance:</SubItem>
+            <SubItem>{tokenBalance} PLT</SubItem>
           </Item>
           <Item>
-            <h3>Token balance: {tokenBalance} PLT</h3>
-          </Item>
-          <Item>
-            <h4>Ready to get some PLT?</h4>
             <ControlButton onClick={onGetTokenClick}>
               Send me PLT!
             </ControlButton>
