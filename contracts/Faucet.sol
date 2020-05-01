@@ -19,16 +19,22 @@ contract Faucet is Ownable {
     }
 
     function turnOn() public onlyOwner {
+        require(!turnedOn, "Faucet is already on.");
+
         turnedOn = true;
         emit FaucetTurnedOn();
     }
 
     function turnOff() public onlyOwner {
+        require(turnedOn, "Faucet is already off.");
+
         turnedOn = false;
         emit FaucetTurnedOff();
     }
 
     function withdraw(uint256 amount) public {
+        require(turnedOn, "Faucet must be turned on to withdraw.");
+
         token.transfer(msg.sender, amount);
         emit FaucetWithdrawal(msg.sender, amount);
     }
