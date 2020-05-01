@@ -75,7 +75,8 @@ const resetToken = async (
   setToken,
   setFaucet,
   setTokenDetails,
-  setIsOwner
+  setIsOwner,
+  setIsFaucetOn
 ) => {
   if (!web3) return;
 
@@ -87,6 +88,10 @@ const resetToken = async (
   await updateTokenInfo(token, setTokenDetails);
 
   await checkIsOwner(token, account, setIsOwner);
+
+  const isOn = await faucet.methods.turnedOn().call();
+  setIsFaucetOn(isOn);
+  console.debug("Faucet status:", isOn);
 };
 
 const setEventListeners = async (account, token, faucet, setBalances) => {
@@ -166,6 +171,7 @@ const App = () => {
   const [web3, setWeb3] = useState(null);
   const [token, setToken] = useState(null);
   const [faucet, setFaucet] = useState(null);
+  const [isFaucetOn, setIsFaucetOn] = useState(false);
   const [tokenDetails, setTokenDetails] = useState({
     name: "",
     symbol: "",
@@ -189,7 +195,15 @@ const App = () => {
 
   useEffect(() => {
     if (account === NO_NETWORK || network === NO_NETWORK || !web3) return;
-    resetToken(web3, account, setToken, setFaucet, setTokenDetails, setIsOwner);
+    resetToken(
+      web3,
+      account,
+      setToken,
+      setFaucet,
+      setTokenDetails,
+      setIsOwner,
+      setIsFaucetOn
+    );
   }, [web3, account, network]);
 
   useEffect(() => {
@@ -226,7 +240,8 @@ const App = () => {
 
   const handleTransactionResult = (err, txHash) => {
     if (err) {
-      console.log(err);
+      console.debug(err);
+      console.log(err.message.slice(0, 42));
       setTransactionStatus({
         message: "Transaction failed.",
         type: "fail",
@@ -238,6 +253,26 @@ const App = () => {
         type: "success",
       });
     }
+  };
+  const handleFaucetOnOffClick = async (event) => {
+    event.preventDefault();
+
+    setTransactionStatus({
+      message: "Waiting on transaction status...",
+      type: "wait",
+    });
+
+    console.debug("Setting faucet status to:", !isFaucetOn);
+    setIsFaucetOn(!isFaucetOn);
+
+    if (isFaucetOn)
+      await faucet.methods
+        .turnOff()
+        .send({ from: account }, handleTransactionResult);
+    else
+      await faucet.methods
+        .turnOn()
+        .send({ from: account }, handleTransactionResult);
   };
 
   const { totalSupply, decimals, name, symbol } = tokenDetails;
@@ -263,6 +298,8 @@ const App = () => {
         <UserSection
           account={account}
           isOwner={isOwner}
+          isFaucetOn={isFaucetOn}
+          onFaucetOnOffClick={handleFaucetOnOffClick}
           tokenBalance={balances.account}
           faucetBalance={balances.faucet}
           onSendToFaucetClick={handleSendToFaucetClick}

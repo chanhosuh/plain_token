@@ -34,6 +34,13 @@
         color: #ffffff
         background: none
 
+    &:disabled
+        @extend .button
+        border: 1px solid #999999
+        color: #666666
+        cursor: not-allowed
+        pointer-events: none
+
 @media all and (max-width:30em)
 .button
     display: block
