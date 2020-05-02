@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "npx truffle test",
+    "test:gas": "GAS_REPORTER=true npx truffle test",
     "lint": "npx solhint contracts/**/*.sol",
     "coverage": "npx solidity-coverage",
     "ganache": "./ganache/ganache_start.sh",
@@ -18,6 +19,7 @@
   "dependencies": {
     "@openzeppelin/contracts": "^3.0.0",
     "dotenv": "^8.2.0",
+    "eth-gas-reporter": "^0.2.17",
     "ganache-cli": "^6.9.1",
     "solhint": "^2.3.1",
     "solidity-coverage": "^0.7.4",
