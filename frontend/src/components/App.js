@@ -282,6 +282,7 @@ const App = () => {
       <ContractSection {...tokenDetails}>
         <UserSection
           symbol={tokenDetails.symbol}
+          decimals={tokenDetails.decimals}
           account={account}
           isOwner={isOwner}
           isFaucetOn={isFaucetOn}

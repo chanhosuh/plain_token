@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./UserSection.module.sass";
 import ControlButton from "./ControlButton";
+import { displayDecimals } from "../utils/erc20";
 
 const Item = (props) => {
   return <div className={styles.section_user_item}>{props.children}</div>;
@@ -20,6 +21,7 @@ const SectionWrapper = ({ children }) => {
 
 const UserSection = ({
   symbol,
+  decimals,
   account,
   isOwner,
   isFaucetOn,
@@ -39,6 +41,9 @@ const UserSection = ({
     );
   }
 
+  const tokenBalanceDecimals = displayDecimals(tokenBalance, decimals);
+  const faucetBalanceDecimals = displayDecimals(faucetBalance, decimals);
+
   if (isOwner) {
     return (
       <SectionWrapper>
@@ -48,13 +53,13 @@ const UserSection = ({
         <Item>
           <SubItem>Account balance: </SubItem>
           <SubItem>
-            {tokenBalance} {symbol}
+            {tokenBalanceDecimals} {symbol}
           </SubItem>
         </Item>
         <Item>
           <SubItem>Faucet balance: </SubItem>
           <SubItem>
-            {faucetBalance} {symbol}
+            {faucetBalanceDecimals} {symbol}
           </SubItem>
         </Item>
         <ControlButton onClick={onSendToFaucetClick}>
@@ -75,7 +80,7 @@ const UserSection = ({
         <Item>
           <SubItem>Token balance:</SubItem>
           <SubItem>
-            {tokenBalance} {symbol}
+            {tokenBalanceDecimals} {symbol}
           </SubItem>
         </Item>
         <Item>
