@@ -1,29 +1,25 @@
 import React from "react";
-import Section from "./Section";
-import "./UserSection.sass";
+import styles from "./UserSection.module.sass";
 import ControlButton from "./ControlButton";
 
 const Item = (props) => {
-  return <div className="section--user-item">{props.children}</div>;
+  return <div className={styles.section_user_item}>{props.children}</div>;
 };
 
 const SubItem = (props) => {
-  return <div className="section--user-subitem">{props.children}</div>;
+  return <div className={styles.section_user_subitem}>{props.children}</div>;
 };
 
 const Title = (props) => {
-  return <div className="section--user-title">{props.children}</div>;
+  return <div className={styles.section_user_title}>{props.children}</div>;
 };
 
 const SectionWrapper = ({ children }) => {
-  return (
-    <Section id="user" className="section--user">
-      {children}
-    </Section>
-  );
+  return <div className={styles.section_user}>{children}</div>;
 };
 
 const UserSection = ({
+  symbol,
   account,
   isOwner,
   isFaucetOn,
@@ -51,11 +47,15 @@ const UserSection = ({
         </Title>
         <Item>
           <SubItem>Account balance: </SubItem>
-          <SubItem>{tokenBalance} PLT</SubItem>
+          <SubItem>
+            {tokenBalance} {symbol}
+          </SubItem>
         </Item>
         <Item>
           <SubItem>Faucet balance: </SubItem>
-          <SubItem>{faucetBalance} PLT</SubItem>
+          <SubItem>
+            {faucetBalance} {symbol}
+          </SubItem>
         </Item>
         <ControlButton onClick={onSendToFaucetClick}>
           Send to faucet
@@ -74,10 +74,14 @@ const UserSection = ({
         </Title>
         <Item>
           <SubItem>Token balance:</SubItem>
-          <SubItem>{tokenBalance} PLT</SubItem>
+          <SubItem>
+            {tokenBalance} {symbol}
+          </SubItem>
         </Item>
         <Item>
-          <ControlButton onClick={onGetTokenClick}>Send me PLT!</ControlButton>
+          <ControlButton onClick={onGetTokenClick}>
+            Send me {symbol}!
+          </ControlButton>
         </Item>
         {children}
       </SectionWrapper>

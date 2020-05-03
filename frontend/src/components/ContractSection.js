@@ -1,14 +1,13 @@
 import React from "react";
-import Section from "./Section";
 import styles from "./ContractSession.module.sass";
 
-const ContractSection = ({ name, symbol, decimals, totalSupply }) => {
+const ContractSection = ({ name, symbol, decimals, totalSupply, children }) => {
   console.debug("Total supply:", totalSupply);
   console.debug("decimals:", decimals);
   const supply = parseInt(totalSupply) / 10 ** parseInt(decimals);
 
   return (
-    <Section className={styles.section_contract}>
+    <div className={styles.section_contract}>
       <h2 className={styles.title_outlined}>
         <center>
           {name} ({symbol})
@@ -17,7 +16,8 @@ const ContractSection = ({ name, symbol, decimals, totalSupply }) => {
       <p>
         Total supply: {supply} {symbol}
       </p>
-    </Section>
+      {children}
+    </div>
   );
 };
 

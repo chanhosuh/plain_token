@@ -9,9 +9,7 @@ import tokenArtifact from "../contracts/PlainToken";
 import faucetArtifact from "../contracts/Faucet";
 import UserSection from "./UserSection";
 import TransactionStatus from "./TransactionStatus";
-
-import Section from "./Section";
-import styles from "./ContractSession.module.sass";
+import ContractSection from "./ContractSection";
 
 const getAccounts = async (web3) => {
   const accounts = await web3.eth.getAccounts();
@@ -275,27 +273,15 @@ const App = () => {
         .send({ from: account }, handleTransactionResult);
   };
 
-  const { totalSupply, decimals, name, symbol } = tokenDetails;
-  console.debug("Total supply:", totalSupply);
-  console.debug("decimals:", decimals);
-  const supply = parseInt(totalSupply) / 10 ** parseInt(decimals);
-
   return (
     <div className="container">
       <Header>
         <HeaderItem>Account: {account}</HeaderItem>
         <HeaderItem>Network: {network}</HeaderItem>
       </Header>
-      <Section className={styles.section_contract}>
-        <h2 className={styles.title_outlined}>
-          <center>
-            {name} ({symbol})
-          </center>
-        </h2>
-        <p>
-          Total supply: {supply} {symbol}
-        </p>
+      <ContractSection {...tokenDetails}>
         <UserSection
+          symbol={tokenDetails.symbol}
           account={account}
           isOwner={isOwner}
           isFaucetOn={isFaucetOn}
@@ -309,7 +295,8 @@ const App = () => {
           message={transactionStatus.message}
           messageType={transactionStatus.type}
         />
-      </Section>
+      </ContractSection>
+      <div className="footer"></div>
     </div>
   );
 };
