@@ -9,6 +9,7 @@ import faucetArtifact from "../contracts/Faucet";
 import UserSection from "./UserSection";
 import TransactionStatus from "./TransactionStatus";
 import ContractSection from "./ContractSection";
+import FaucetSection from "./FaucetSection";
 
 const checkIsOwner = async (token, account, setIsOwner) => {
   const ownerAddress = await token.methods.owner().call();
@@ -234,7 +235,19 @@ const App = () => {
           faucetBalance={balances.faucet}
           onSendToFaucetClick={handleSendToFaucetClick}
           onGetTokenClick={handleGetTokenClick}
-        ></UserSection>
+        />
+        <FaucetSection
+          symbol={tokenDetails.symbol}
+          decimals={tokenDetails.decimals}
+          account={account}
+          isOwner={isOwner}
+          isFaucetOn={isFaucetOn}
+          onFaucetOnOffClick={handleFaucetOnOffClick}
+          tokenBalance={balances.account}
+          faucetBalance={balances.faucet}
+          onSendToFaucetClick={handleSendToFaucetClick}
+          onGetTokenClick={handleGetTokenClick}
+        />
         <TransactionStatus
           message={transactionStatus.message}
           messageType={transactionStatus.type}
