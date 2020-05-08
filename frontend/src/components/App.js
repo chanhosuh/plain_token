@@ -1,70 +1,20 @@
 import React, { useState, useEffect } from "react";
 import "./App.sass";
-import initWeb3 from "../utils/web3";
+import { useWeb3Context } from "../utils/web3";
 import { toBN } from "web3-utils";
 import getContract from "../utils/contract";
 import { Header, HeaderItem } from "./Header";
-import { CHAIN_IDS } from "../utils/constants";
 import tokenArtifact from "../contracts/PlainToken";
 import faucetArtifact from "../contracts/Faucet";
 import UserSection from "./UserSection";
 import TransactionStatus from "./TransactionStatus";
 import ContractSection from "./ContractSection";
 
-const getAccounts = async (web3) => {
-  const accounts = await web3.eth.getAccounts();
-  console.log("accounts[0]: ", accounts[0]);
-
-  return accounts;
-};
-
 const checkIsOwner = async (token, account, setIsOwner) => {
   const ownerAddress = await token.methods.owner().call();
   const isTokenOwner = ownerAddress.toLowerCase() === account.toLowerCase();
   console.debug("is token owner: ", isTokenOwner);
   setIsOwner(isTokenOwner);
-};
-
-const setupWeb3 = async (setAccount, setNetwork) => {
-  const web3 = await initWeb3();
-
-  if (web3) {
-    // add listeners for account and network changes
-    const web3Provider = web3.currentProvider;
-    web3Provider.on("accountsChanged", async (accounts) => {
-      console.log("Account(s) updated.");
-      console.log("accounts[0]: ", accounts[0]);
-      setAccount(accounts[0]);
-    });
-
-    web3Provider.on("networkChanged", async (netId) => {
-      console.log("Network changed.");
-      console.log("Net ID: ", netId);
-      const chain_id = CHAIN_IDS[netId] || netId;
-      setNetwork(chain_id);
-    });
-
-    return web3;
-  }
-};
-
-const initDapp = async (setWeb3, setAccount, setNetwork) => {
-  const web3 = await setupWeb3(setAccount, setNetwork);
-  if (!web3) {
-    console.debug("Web3 could not be initialized.");
-    return;
-  }
-  setWeb3(web3);
-
-  const accounts = await getAccounts(web3);
-  setAccount(accounts[0]);
-
-  const netId = await web3.eth.net.getId();
-  console.log("Net ID: ", netId);
-  const chain_id = CHAIN_IDS[netId] || netId;
-  setNetwork(chain_id);
-
-  console.log("Dapp initialised");
 };
 
 const resetToken = async (
@@ -164,9 +114,6 @@ const NO_ADDRESS = "No address - check MetaMask";
 const NO_NETWORK = "No network - check MetaMask";
 
 const App = () => {
-  const [account, setAccount] = useState(NO_ADDRESS);
-  const [network, setNetwork] = useState(NO_NETWORK);
-  const [web3, setWeb3] = useState(null);
   const [token, setToken] = useState(null);
   const [faucet, setFaucet] = useState(null);
   const [isFaucetOn, setIsFaucetOn] = useState(false);
@@ -185,14 +132,10 @@ const App = () => {
     type: "",
   });
   const [isOwner, setIsOwner] = useState(false);
+  const { web3, account, network } = useWeb3Context();
 
   useEffect(() => {
-    if (account === NO_ADDRESS && network === NO_NETWORK)
-      initDapp(setWeb3, setAccount, setNetwork);
-  }, [account, network]);
-
-  useEffect(() => {
-    if (account === NO_NETWORK || network === NO_NETWORK || !web3) return;
+    if (account === NO_ADDRESS || network === NO_NETWORK || !web3) return;
     resetToken(
       web3,
       account,
