@@ -8,4 +8,7 @@ const CHAIN_IDS = {
   "1337": "Geth private chains (default)",
 };
 
-export { CHAIN_IDS };
+const NO_ADDRESS = "No address - check MetaMask";
+const NO_NETWORK = "No network - check MetaMask";
+
+export { CHAIN_IDS, NO_ADDRESS, NO_NETWORK };

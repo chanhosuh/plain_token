@@ -10,6 +10,7 @@ import UserSection from "./UserSection";
 import TransactionStatus from "./TransactionStatus";
 import ContractSection from "./ContractSection";
 import FaucetSection from "./FaucetSection";
+import { NO_ADDRESS, NO_NETWORK } from "../utils/constants";
 
 const checkIsOwner = async (token, account, setIsOwner) => {
   const ownerAddress = await token.methods.owner().call();
@@ -110,9 +111,6 @@ const updateBalances = async (account, token, faucet, setBalances) => {
   console.debug(`updated token balance: ${accountBalance} `);
   console.debug(`updated faucet balance: ${faucetBalance} `);
 };
-
-const NO_ADDRESS = "No address - check MetaMask";
-const NO_NETWORK = "No network - check MetaMask";
 
 const App = () => {
   const [token, setToken] = useState(null);

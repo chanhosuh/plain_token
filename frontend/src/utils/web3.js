@@ -1,5 +1,5 @@
 import Web3 from "web3";
-import { CHAIN_IDS } from "./constants";
+import { CHAIN_IDS, NO_ADDRESS, NO_NETWORK } from "./constants";
 import React, { useContext, createContext, useState, useEffect } from "react";
 
 const getAccounts = async (web3) => {
@@ -73,9 +73,6 @@ const setupWeb3 = async (setWeb3, setAccount, setNetwork) => {
 };
 
 const Web3Context = createContext({ web3: null, account: "", network: "" });
-
-const NO_ADDRESS = "No address - check MetaMask";
-const NO_NETWORK = "No network - check MetaMask";
 
 const Web3ContextProvider = (props) => {
   const [account, setAccount] = useState(NO_ADDRESS);
